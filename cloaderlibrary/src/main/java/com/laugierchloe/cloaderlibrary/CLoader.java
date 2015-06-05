@@ -3,9 +3,11 @@ package com.laugierchloe.cloaderlibrary;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
@@ -38,11 +40,24 @@ public class CLoader {
 
     }
 
-    static public void displayImage(String url, Context context, final ImageView imageView) {
+    static public void displayImage(String url, Context context, final ImageView imageView, final boolean animation) {
         CLoader.loadImage(url, context, new CLoaderImageListener() {
             @Override
             public void imageLoaded(Bitmap bitmap) {
-                imageView.setImageBitmap(bitmap);
+
+                if (imageView != null && bitmap!=null) {
+                    //imageView.setAlpha(0);
+                    if (imageView.getDrawable() == null && animation) {
+                        AlphaAnimation animation1 = new AlphaAnimation(0.2f, 1.0f);
+                        animation1.setDuration(1000);
+                        animation1.setFillAfter(true);
+                        imageView.startAnimation(animation1);
+                    }
+                    imageView.setImageBitmap(bitmap);
+
+
+                }
+
             }
 
             @Override
@@ -79,7 +94,15 @@ public class CLoader {
     }
 
 
-    //to do cancel
+    static public void cancelRequestsWithTag(Context context, String tag) {
+
+        if (RequestQueueSingleton.getInstance(context) != null) {
+            RequestQueue rq = RequestQueueSingleton.getInstance(context).getRequestQueue();
+            rq.cancelAll(tag);
+        }
+    }
+
+
 
 
 

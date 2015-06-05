@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.laugierchloe.cloaderlibrary.CLoader;
 import com.laugierchloe.cloaderlibrary.CLoaderImageListener;
@@ -17,16 +18,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class SampleActivity extends ActionBarActivity {
+
+
+
+    ListView list;
+    SampleAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
-
-        final ImageView mImageView = (ImageView) findViewById(R.id.imageView);
+        list=(ListView)findViewById(R.id.listView);
+        adapter=new SampleAdapter(this, new ArrayList<String>());
+        list.setAdapter(adapter);
 
 
         final Context ctx = this;
@@ -42,11 +51,11 @@ public class SampleActivity extends ActionBarActivity {
                         JSONArray images = product.getJSONArray("images");
                         for (int j=0; j<images.length(); j++) {
 
-                            JSONObject image = images.getJSONObject(i);
+                            JSONObject image = images.getJSONObject(j);
                             String imagePath = image.getString("path");
 
 
-                            CLoader.displayImage(imagePath, ctx, mImageView);
+                            adapter.add(imagePath);
 
 
 
@@ -56,6 +65,7 @@ public class SampleActivity extends ActionBarActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                adapter.notifyDataSetChanged();
 
 
             }
