@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.laugierchloe.cloaderlibrary.CImageRequest;
 import com.laugierchloe.cloaderlibrary.CLoader;
 
 import java.util.ArrayList;
@@ -50,12 +51,32 @@ public class SampleAdapter  extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View vi=convertView;
-        if(convertView==null)
-            vi = inflater.inflate(R.layout.cell_image_sample, null);
 
-        ImageView image=(ImageView)vi.findViewById(R.id.img_cell);
-        CLoader.displayImage(data.get(position), context, image, true);
-        return vi;
+
+        final ViewHolder mHolder;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.cell_image_sample, null);
+            mHolder = new ViewHolder();
+
+            mHolder.mImage=(ImageView) convertView.findViewById(R.id.img_cell);
+
+            convertView.setTag(mHolder);
+
+        } else {
+            mHolder = (ViewHolder) convertView.getTag();
+
+
+        }
+
+
+        CImageRequest r = CLoader.displayImage(data.get(position), context, mHolder.mImage, true);
+
+        //r.cancel();
+        return convertView;
+    }
+
+    private class ViewHolder {
+        private ImageView mImage;
+
     }
 }

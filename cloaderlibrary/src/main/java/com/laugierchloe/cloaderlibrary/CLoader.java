@@ -2,7 +2,6 @@ package com.laugierchloe.cloaderlibrary;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
@@ -20,9 +19,19 @@ import org.json.JSONObject;
  */
 public class CLoader {
 
-    static public void loadImage(String url, Context context, final CLoaderImageListener listener ) {
 
-        ImageRequest request = new ImageRequest(url,
+
+    /**
+     * Load image <br />
+     *
+     * @param url        Image URL (i.e. "http://site.com/image.png")
+     * @param context    context
+     * @param listener    {@linkplain CLoaderImageListener Listener} for image loading.
+     * @return request you can use if you want to cancel
+     */
+    static public CImageRequest loadImage(String url, Context context, final CLoaderImageListener listener ) {
+
+        CImageRequest request = new CImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
@@ -35,13 +44,43 @@ public class CLoader {
                     }
                 });
         RequestQueueSingleton.getInstance(context).addToRequestQueue(request);
+        return request;
 
 
 
     }
 
-    static public void displayImage(String url, Context context, final ImageView imageView, final boolean animation) {
-        CLoader.loadImage(url, context, new CLoaderImageListener() {
+
+    /**
+     * Load image with tag<br />
+     *
+     * @param url        Image URL (i.e. "http://site.com/image.png")
+     * @param context    context
+     * @param listener    {@linkplain CLoaderImageListener Listener} for image loading.
+     * @param tag     to cancel multiple request you can use tag
+     * @return request you can use if you want to cancel
+     */
+    static public CImageRequest loadImage(String url, Context context, final CLoaderImageListener listener, String tag ) {
+
+        CImageRequest request = CLoader.loadImage(url, context, listener);
+        request.setTag(tag);
+        return request;
+
+
+
+    }
+
+    /**
+     * Loads and display image in ImageView provided.<br />
+     *
+     * @param url        Image URL (i.e. "http://site.com/image.png")
+     * @param context    context
+     * @param imageView   imageView to contain image
+     * @param animation   do you want fading animation
+     * @return request you can use if you want to cancel
+     */
+    static public CImageRequest displayImage(String url, Context context, final ImageView imageView, final boolean animation) {
+        CImageRequest r = CLoader.loadImage(url, context, new CLoaderImageListener() {
             @Override
             public void imageLoaded(Bitmap bitmap) {
 
@@ -65,11 +104,34 @@ public class CLoader {
 
             }
         });
+        return r;
 
 
     }
 
+    /**
+     * Loads and display image in ImageView provided with tag.<br />
+     *
+     * @param url        Image URL (i.e. "http://site.com/image.png")
+     * @param context    context
+     * @param imageView   imageView to contain image
+     * @param animation   do you want fading animation
+     * @return request you can use if you want to cancel
+     */
+    static public CImageRequest displayImage(String url, Context context, final ImageView imageView, final boolean animation, String tag) {
+        CImageRequest request = CLoader.displayImage(url, context, imageView, animation);
+        request.setTag(tag);
+        return request;
+    }
 
+
+    /**
+     * Load json <br />
+     *
+     * @param url        json URL (i.e. "http://site.com/json.json")
+     * @param context    context
+     * @param listener    {@linkplain CLoaderJsonListener Listener} for json loading.
+     */
     static public void loadJson(String url, Context context, final CLoaderJsonListener listener) {
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
