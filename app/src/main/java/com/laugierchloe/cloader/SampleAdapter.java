@@ -68,8 +68,14 @@ public class SampleAdapter  extends BaseAdapter {
 
         }
 
+        boolean anim = false;
+        if (mHolder.mImage.getDrawable() == null) {
+            anim = true;
 
-        CImageRequest r = CLoader.displayImage(data.get(position), context, mHolder.mImage, true);
+        }
+        CImageRequest r = CLoader.displayImage(data.get(position), context, mHolder.mImage, anim);
+
+
 
         //r.cancel();
         return convertView;

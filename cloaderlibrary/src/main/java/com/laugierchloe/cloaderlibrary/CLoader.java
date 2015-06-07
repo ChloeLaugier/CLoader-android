@@ -86,7 +86,7 @@ public class CLoader {
 
                 if (imageView != null && bitmap!=null) {
                     //imageView.setAlpha(0);
-                    if (imageView.getDrawable() == null && animation) {
+                    if (animation) {
                         AlphaAnimation animation1 = new AlphaAnimation(0.2f, 1.0f);
                         animation1.setDuration(1000);
                         animation1.setFillAfter(true);
